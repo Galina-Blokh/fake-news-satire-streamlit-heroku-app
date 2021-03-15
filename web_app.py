@@ -5,13 +5,12 @@ from pattern.text import Sentence
 from pattern.text.en import sentiment, parse, modality
 from transformers import AutoTokenizer, AutoModel
 import torch
-
 MODEL_PATH = 'finalized_model.pkl'
 import streamlit as st
 
 
 # Mean Pooling - Take attention mask into account for correct averaging
-@st.cache
+@st.cache(suppress_st_warning=False)
 def mean_pooling(model_output, attention_mask):
     token_embeddings = model_output[0]  # First element of model_output contains all token embeddings
     input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
@@ -20,7 +19,7 @@ def mean_pooling(model_output, attention_mask):
     return sum_embeddings / sum_mask
 
 
-@st.cache
+@st.cache(suppress_st_warning=False)
 def load_pipeline(sentences):
     """
     Load the Text Processing and Classifier Pipeline
@@ -59,10 +58,9 @@ def load_pipeline(sentences):
             my_prediction = "Satire"
         return my_prediction, prediction
 
-
 st.title('Fake & Satire Classificator')
 news_story = st.text_area('Enter a News Story', height=200)
-st.button('Submit')
-class_text, probability = load_pipeline(pd.Series(news_story))
-st.write('Your news story is classified as ', class_text, 'with a ',
-         round(np.max(probability) * 100, 2), '% probability.')
+if st.button('Submit'):
+    class_text, probability = load_pipeline(pd.Series(news_story))
+    st.write('Your news story is classified as ', class_text, 'with a ',
+             round(np.max(probability) * 100, 2), '% probability.')
