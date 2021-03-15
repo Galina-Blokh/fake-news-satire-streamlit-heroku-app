@@ -58,9 +58,9 @@ def load_pipeline(sentences):
             my_prediction = "Satire"
         return my_prediction, prediction
 
-st.title('Fake & Satire Classificator')
-news_story = st.text_area('Enter a News Story', height=200)
+st.title('Fake news or Satire. Classificator')
+news_story = st.text_area('Enter the Text', height=200)
 if st.button('Submit'):
     class_text, probability = load_pipeline(pd.Series(news_story))
-    st.write('Your news story is classified as ', class_text, 'with a ',
+    st.write('Your text seems to be a ', class_text, 'with a ',
              round(np.max(probability) * 100, 2), '% probability.')
