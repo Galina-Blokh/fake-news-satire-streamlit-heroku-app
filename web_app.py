@@ -5,6 +5,7 @@ from pattern.text import Sentence
 from pattern.text.en import sentiment, parse, modality
 from transformers import AutoTokenizer, AutoModel
 import torch
+
 MODEL_PATH = 'finalized_model.pkl'
 import streamlit as st
 
@@ -25,8 +26,8 @@ def load_pipeline(sentences):
     Load the Text Processing and Classifier Pipeline
     """
     # Tokenize sentences
-    tokenizer = AutoTokenizer.from_pretrained("mrm8488/bert-tiny-finetuned-squadv2")
-    model = AutoModel.from_pretrained("mrm8488/bert-tiny-finetuned-squadv2")
+    tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/ce-ms-marco-TinyBERT-L-4")
+    model = AutoModel.from_pretrained("sentence-transformers/ce-ms-marco-TinyBERT-L-4")
 
     encoded_input = tokenizer(sentences.to_list(), padding=True, truncation=True, max_length=128, return_tensors='pt')
 
@@ -57,6 +58,7 @@ def load_pipeline(sentences):
         else:
             my_prediction = "Satire"
         return my_prediction, prediction
+
 
 st.title('Fake news or Satire. Classificator')
 news_story = st.text_area('Enter the Text', height=200)
